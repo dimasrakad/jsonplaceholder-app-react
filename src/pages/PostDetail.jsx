@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import LoadingSpinner from "../components/LoadingSpinner";
 import Comments from "../components/Comments";
@@ -10,6 +10,7 @@ import fetchComments from "../apis/fetchComments";
 function PostDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,9 +50,12 @@ function PostDetail() {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <Link to="/" className="text-blue-600 hover:underline mb-4 inline-block">
+      <button
+        onClick={() => navigate(-1)}
+        className="text-blue-600 hover:underline mb-4 inline-block"
+      >
         ← Back to Posts
-      </Link>
+      </button>
       <div className="bg-white mb-6">
         <h2 className="text-gray-900 text-2xl font-bold mb-4">{post.title}</h2>
         <p className="text-gray-800 text-base">{post.body}</p>

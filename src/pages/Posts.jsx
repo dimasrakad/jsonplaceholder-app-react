@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import SearchInput from "../components/SearchInput";
 import Pagination from "../components/Pagination";
@@ -17,10 +17,28 @@ function Posts() {
 
   const [searchInput, setSearchInput] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
+  const [prevSearchInput, setPrevSearchInput] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page")) || 1;
   const postsPerPage = 10;
 
+  const handlePageChange = useCallback(
+    (pageNumber) => {
+      setSearchParams({ page: pageNumber });
+    },
+    [setSearchParams]
+  );
+
+  // Reset to page 1 when search input changed
+  useEffect(() => {
+    if (searchInput !== prevSearchInput) {
+      setPrevSearchInput(searchInput);
+      handlePageChange(1);
+    }
+  }, [searchInput, prevSearchInput, handlePageChange]);
+
+  // Fetch data
   useEffect(() => {
     const loadPosts = async () => {
       try {
@@ -49,6 +67,7 @@ function Posts() {
     loadPosts();
   }, []);
 
+  // Search filter, delay 500ms
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
       setLoading(true);
@@ -61,13 +80,12 @@ function Posts() {
             post.title.toLowerCase().includes(searchInput.toLowerCase()) ||
             post.body.toLowerCase().includes(searchInput.toLowerCase()) ||
             post.user?.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-            post.user?.name.toLowerCase().includes(searchInput.toLowerCase())
+            post.user?.email.toLowerCase().includes(searchInput.toLowerCase())
         );
       }
 
       setPosts(filtered);
       setAppliedSearch(searchInput);
-      setCurrentPage(1);
       setLoading(false);
     }, 500); // delay 500ms before run search
 
@@ -121,7 +139,7 @@ function Posts() {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={handlePageChange}
       ></Pagination>
     </div>
   );
