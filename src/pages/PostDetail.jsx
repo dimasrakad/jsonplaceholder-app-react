@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
+import LoadingSpinner from "../components/LoadingSpinner";
 import Comments from "../components/Comments";
+import ErrorPage from "./ErrorPage";
 import fetchPost from "../apis/fetchPost";
 import fetchComments from "../apis/fetchComments";
 
 function PostDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,6 +24,10 @@ function PostDetail() {
         setPost(postData);
         setComments(commentsData);
       } catch (err) {
+        if (err.message === "Post not found") {
+          navigate("/not-found", { replace: true });
+          return;
+        }
         setError(err.message);
       } finally {
         setLoading(false);
@@ -29,14 +35,16 @@ function PostDetail() {
     };
 
     loadDetail();
-  }, [id]);
+  }, [id, navigate]);
 
-  if (loading) {
-    return <LoadingSpinner></LoadingSpinner>;
-  }
+  if (loading) return <LoadingSpinner></LoadingSpinner>;
 
   if (error) {
-    return <p className="text-red-500 text-center">Error: {error}</p>;
+    return (
+      <div className="max-w-4xl mx-auto p-8 text-center">
+        <ErrorPage message={error} />
+      </div>
+    );
   }
 
   return (

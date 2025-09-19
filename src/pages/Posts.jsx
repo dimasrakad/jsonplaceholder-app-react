@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import SearchInput from "../components/SearchInput";
 import Pagination from "../components/Pagination";
+import UserInfoHeader from "../components/UserInfoHeader";
 
 import fetchPosts from "../apis/fetchPosts";
+import fetchUsers from "../apis/fetchUsers";
+import ErrorPage from "./ErrorPage";
 
 function Posts() {
   const [posts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -20,8 +24,21 @@ function Posts() {
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        const data = await fetchPosts();
-        setPosts(data);
+        const postsData = await fetchPosts();
+        const usersData = await fetchUsers();
+
+        const userMap = {};
+        usersData.forEach((user) => {
+          userMap[user.id] = user;
+        });
+
+        const postsWithUser = postsData.map((post) => ({
+          ...post,
+          user: userMap[post.userId],
+        }));
+
+        setPosts(postsWithUser);
+        setAllPosts(postsWithUser);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -34,30 +51,42 @@ function Posts() {
 
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
-      try {
-        setLoading(true);
-        const data = await fetchPosts(searchInput);
-        setPosts(data);
-        setAppliedSearch(searchInput);
-        setCurrentPage(1);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      setLoading(true);
+
+      let filtered = allPosts;
+
+      if (searchInput.trim()) {
+        filtered = allPosts.filter(
+          (post) =>
+            post.title.toLowerCase().includes(searchInput.toLowerCase()) ||
+            post.body.toLowerCase().includes(searchInput.toLowerCase()) ||
+            post.user?.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+            post.user?.name.toLowerCase().includes(searchInput.toLowerCase())
+        );
       }
+
+      setPosts(filtered);
+      setAppliedSearch(searchInput);
+      setCurrentPage(1);
+      setLoading(false);
     }, 500); // delay 500ms before run search
 
     return () => clearTimeout(delayDebounce);
-  }, [searchInput]);
+  }, [searchInput, allPosts]);
 
   if (loading) return <LoadingSpinner></LoadingSpinner>;
 
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-8 text-center">
+        <ErrorPage message={error} />
+      </div>
+    );
+  }
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   return (
@@ -68,7 +97,17 @@ function Posts() {
         {currentPosts.map((post) => (
           <Link to={`/posts/${post.id}`} key={post.id}>
             <div className="border border-gray-400 bg-white rounded p-4 flex flex-col justify-between leading-normal hover:shadow-lg transition">
-              <div className="text-gray-900 font-bold text-xl mb-2">
+              <UserInfoHeader
+                name={highlightText(
+                  post.user?.name || "Unknown User",
+                  appliedSearch
+                )}
+                email={highlightText(
+                  post.user?.email || "No Email",
+                  appliedSearch
+                )}
+              />
+              <div className="text-gray-900 font-bold text-xl mt-2 mb-2">
                 {highlightText(post.title, appliedSearch)}
               </div>
               <p className="text-gray-700 text-base">
