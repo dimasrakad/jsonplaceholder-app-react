@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import SearchInput from "../components/SearchInput";
-import Pagination from "../components/Pagination";
 import UserInfoHeader from "../components/UserInfoHeader";
 
 import fetchPosts from "../apis/fetchPosts";
@@ -17,26 +16,14 @@ function Posts() {
 
   const [searchInput, setSearchInput] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
-  const [prevSearchInput, setPrevSearchInput] = useState("");
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page")) || 1;
-  const postsPerPage = 10;
-
-  const handlePageChange = useCallback(
-    (pageNumber) => {
-      setSearchParams({ page: pageNumber });
-    },
-    [setSearchParams]
-  );
-
-  // Reset to page 1 when search input changed
-  useEffect(() => {
-    if (searchInput !== prevSearchInput) {
-      setPrevSearchInput(searchInput);
-      handlePageChange(1);
-    }
-  }, [searchInput, prevSearchInput, handlePageChange]);
+  const scrollTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   // Fetch data
   useEffect(() => {
@@ -92,6 +79,29 @@ function Posts() {
     return () => clearTimeout(delayDebounce);
   }, [searchInput, allPosts]);
 
+  // Reset to page 1 when search input changed
+  useEffect(() => {
+    if (searchInput !== appliedSearch) {
+      setAppliedSearch(searchInput);
+    }
+  }, [searchInput, appliedSearch]);
+
+  // Scroll detection for back to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+
+    return () => {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   if (loading) return <LoadingSpinner></LoadingSpinner>;
 
   if (error) {
@@ -102,17 +112,12 @@ function Posts() {
     );
   }
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(posts.length / postsPerPage);
-
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto">
       <SearchInput value={searchInput} onChange={setSearchInput}></SearchInput>
 
       <div className="grid gap-6">
-        {currentPosts.map((post) => (
+        {posts.map((post) => (
           <Link to={`/posts/${post.id}`} key={post.id}>
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 flex flex-col justify-between ring ring-gray-900/5 leading-normal hover:shadow-lg transition">
               <UserInfoHeader
@@ -136,11 +141,27 @@ function Posts() {
         ))}
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      ></Pagination>
+      {showBackToTop && (
+        <button
+          onClick={scrollTop}
+          className="fixed bottom-6 right-6 w-12 h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 focus:outline-none z-50 cursor-pointer"
+          aria-label="Back to top"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={24}
+            height={24}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 19V5M5 12l7-7 7 7"></path>
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

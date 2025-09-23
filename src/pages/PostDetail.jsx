@@ -49,7 +49,7 @@ function PostDetail() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
+    <div className="max-w-3xl mx-auto">
       <button
         onClick={() => navigate(-1)}
         className="w-10 h-10 rounded-full text-gray-900 dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 flex items-center justify-center mb-4 transition duration-200 ease-in-out cursor-pointer"
