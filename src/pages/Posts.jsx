@@ -111,10 +111,10 @@ function Posts() {
     <div className="max-w-4xl mx-auto p-4">
       <SearchInput value={searchInput} onChange={setSearchInput}></SearchInput>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid gap-6">
         {currentPosts.map((post) => (
           <Link to={`/posts/${post.id}`} key={post.id}>
-            <div className="border border-gray-400 bg-white rounded p-4 flex flex-col justify-between leading-normal hover:shadow-lg transition">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 flex flex-col justify-between ring ring-gray-900/5 leading-normal hover:shadow-lg transition">
               <UserInfoHeader
                 name={highlightText(
                   post.user?.name || "Unknown User",
@@ -125,10 +125,10 @@ function Posts() {
                   appliedSearch
                 )}
               />
-              <div className="text-gray-900 font-bold text-xl mt-2 mb-2">
+              <div className="text-gray-900 dark:text-white font-medium text-xl mt-2 mb-2">
                 {highlightText(post.title, appliedSearch)}
               </div>
-              <p className="text-gray-700 text-base">
+              <p className="text-gray-700 dark:text-gray-300 text-base">
                 {highlightText(post.body, appliedSearch)}
               </p>
             </div>

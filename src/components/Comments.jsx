@@ -2,19 +2,21 @@ import UserInfoHeader from "./UserInfoHeader";
 
 function Comments({ comments }) {
   return (
-    <div className="bg-white">
-      <h3 className="text-xl font-semibold mb-3">Comments</h3>
+    <div>
+      <h3 className="text-xl dark:text-white font-semibold mb-3">Comments</h3>
       {comments.length === 0 ? (
-        <p>No comments yet.</p>
+        <p className="dark:text-white">No comments yet.</p>
       ) : (
         <div className="space-y-4">
           {comments.map((c) => (
             <div
               key={c.id}
-              className="bg-white border border-gray-400 rounded-lg p-4 shadow"
+              className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow"
             >
               <UserInfoHeader name={c.name} email={c.email} />
-              <p className="mt-2 text-gray-800">{c.body}</p>
+              <p className="mt-2 text-gray-800 dark:text-gray-300 text-base">
+                {c.body}
+              </p>
             </div>
           ))}
         </div>

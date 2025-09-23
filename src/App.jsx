@@ -3,14 +3,18 @@ import Posts from "./pages/Posts";
 import PostDetail from "./pages/PostDetail";
 import NotFoundPage from "./pages/NotFoundPage";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Layout from "./components/Layout";
 
 function App() {
   return (
     <ErrorBoundary>
       <Router>
         <Routes>
-          <Route path="/" element={<Posts />} />
-          <Route path="/posts/:id" element={<PostDetail />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Posts />} />
+            <Route path="posts" element={<Posts />} />
+            <Route path="posts/:id" element={<PostDetail />} />
+          </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>

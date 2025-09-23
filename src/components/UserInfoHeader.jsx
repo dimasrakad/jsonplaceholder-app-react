@@ -7,8 +7,8 @@ function UserInfoHeader({ name, email }) {
         alt="User image"
       />
       <div className="text-sm">
-        <strong className="block text-gray-900">{name}</strong>
-        <small className="text-gray-600">{email}</small>
+        <strong className="block text-gray-900 dark:text-white">{name}</strong>
+        <small className="text-gray-500 dark:text-gray-400">{email}</small>
       </div>
     </div>
   );
