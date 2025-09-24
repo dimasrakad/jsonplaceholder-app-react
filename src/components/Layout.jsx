@@ -4,7 +4,6 @@ import SidebarContent from "./SidebarContent";
 
 function Layout() {
   const VITE_APP_NAME = import.meta.env.VITE_APP_NAME;
-  console.log(VITE_APP_NAME);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -39,7 +38,7 @@ function Layout() {
         </h1>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+          className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
           aria-label="Toggle sidebar"
         >
           <svg
@@ -84,7 +83,7 @@ function Layout() {
             </h2>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
               aria-label="Close sidebar"
             >
               <svg
