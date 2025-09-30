@@ -121,7 +121,7 @@ function AlbumCard({ album }) {
         </h3>
         {album.user && (
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            by {album.user.name}
+            by <span className="font-bold">{album.user.name}</span>
           </p>
         )}
       </div>

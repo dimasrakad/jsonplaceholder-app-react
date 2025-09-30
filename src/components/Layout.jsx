@@ -71,7 +71,7 @@ function Layout() {
 
         {/* Mobile sidebar */}
         <div
-          className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-20 transition-opacity duration-300 ease-in-out ${sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+          className={`lg:hidden fixed inset-0 bg-black/30 bg-opacity-50 z-20 transition-opacity duration-300 ease-in-out ${sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
           onClick={() => setSidebarOpen(false)}
         ></div>
 

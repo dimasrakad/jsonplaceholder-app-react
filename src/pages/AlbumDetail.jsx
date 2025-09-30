@@ -201,13 +201,23 @@ function AlbumDetail() {
               </svg>
             </button>
 
+            <div className="inset-0 flex items-center justify-center">
+              <LoadingSpinner />
+            </div>
+
             <img
               src={`${VITE_IMAGES_API_URL}/id/${selectedPhoto.id}/600/600`}
               alt={`${selectedPhoto.title}`}
-              className="w-full h-auto max-h-[80vh] object-contain rounded"
+              className="w-full h-auto max-h-[80vh] object-contain rounded opacity-0"
               loading="lazy"
+              onLoad={(e) => {
+                e.target.classList.remove("opacity-0");
+                e.target.previousElementSibling?.classList.add("hidden");
+              }}
               onError={(e) => {
                 e.target.src = "/image-error.png";
+                e.target.classList.remove("opacity-0");
+                e.target.previousElementSibling?.classList.add("hidden");
               }}
             />
 
