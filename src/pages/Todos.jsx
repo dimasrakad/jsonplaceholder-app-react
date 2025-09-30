@@ -16,16 +16,9 @@ function Todos() {
   const [searchInput, setSearchInput] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  const scrollTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   //   Fetch data
   useEffect(() => {
-    const loadTodosAndUsers = async () => {
+    const loadTodos = async () => {
       try {
         const todosData = await fetchTodos();
         const usersData = await fetchUsers();
@@ -48,7 +41,7 @@ function Todos() {
         setLoading(false);
       }
     };
-    loadTodosAndUsers();
+    loadTodos();
   }, []);
 
   //   Search filter, delay 500ms
@@ -73,6 +66,13 @@ function Todos() {
 
     return () => clearTimeout(delayDebounce);
   }, [searchInput, localTodos]);
+
+  const scrollTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   //   Scroll detection for back to top button
   useEffect(() => {
@@ -107,13 +107,7 @@ function Todos() {
   };
 
   if (loading) return <LoadingSpinner />;
-  if (error) {
-    return (
-      <div className="max-w-4xl mx-auto p-8 text-center">
-        <ErrorPage message={error} />
-      </div>
-    );
-  }
+  if (error) return <ErrorPage message={error} />;
 
   return (
     <div className="max-w-4xl mx-auto p-4">

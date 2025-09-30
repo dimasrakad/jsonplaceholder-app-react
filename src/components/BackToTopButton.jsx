@@ -4,6 +4,7 @@ function BackToTopButton({ onClick }) {
       onClick={onClick}
       className="fixed bottom-6 right-6 w-12 h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 focus:outline-none z-50 cursor-pointer"
       aria-label="Back to top"
+      title="Back to top"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

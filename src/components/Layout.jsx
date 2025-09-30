@@ -40,6 +40,7 @@ function Layout() {
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
           aria-label="Toggle sidebar"
+          title="Toggle sidebar"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -85,6 +86,7 @@ function Layout() {
               onClick={() => setSidebarOpen(false)}
               className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
               aria-label="Close sidebar"
+              title="Close sidebar"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
