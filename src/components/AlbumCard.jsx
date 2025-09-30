@@ -59,7 +59,7 @@ function AlbumCard({ album }) {
           ref={scrollContainerRef}
           className="flex overflow-x-hidden gap-1 pb-1 scroll-smooth"
         >
-          {album.photos.map((photo) => (
+          {album.photos.slice(0, 7).map((photo) => (
             <div
               key={photo.id}
               className="flex-shrink-0 w-32 h-32 rounded overflow-hidden border border-gray-300 dark:border-gray-600"
@@ -86,9 +86,11 @@ function AlbumCard({ album }) {
               </div>
             </div>
           ))}
-          <div className="flex-shrink-0 w-32 h-32 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded border border-dashed border-gray-400 dark:border-gray-600">
-            more...
-          </div>
+          {album.photos.length > 7 && (
+            <div className="flex-shrink-0 w-32 h-32 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded border border-dashed border-gray-400 dark:border-gray-600">
+              +{album.photos.length - 7} more...
+            </div>
+          )}
         </div>
 
         <button

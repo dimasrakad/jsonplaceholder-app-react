@@ -32,7 +32,7 @@ function Albums() {
 
         const albumsWithUserAndPhotosPromises = albumsData.map(
           async (album) => {
-            const photos = await fetchPhotos(album.id, 7);
+            const photos = await fetchPhotos(album.id);
             return { ...album, user: userMap[album.userId], photos };
           }
         );
