@@ -19,7 +19,7 @@ class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="max-w-4xl mx-auto p-8 text-center">
+        <div className="max-w-4xl min-h-screen mx-auto p-8 dark:bg-gray-800 text-center">
           <ErrorPage
             message="We're sorry for the inconvenience. Please try refreshing the page
         or come back later."

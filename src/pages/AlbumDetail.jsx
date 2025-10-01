@@ -6,6 +6,7 @@ import ErrorPage from "./ErrorPage";
 import fetchAlbum from "../apis/fetchAlbum";
 import fetchPhotos from "../apis/fetchPhotos";
 import fetchUser from "../apis/fetchUser";
+import Lightbox from "../components/Lightbox";
 
 const VITE_IMAGES_API_URL = import.meta.env.VITE_IMAGES_API_URL;
 
@@ -20,7 +21,7 @@ function AlbumDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(false);
   const loadMoreRef = useRef(null);
 
   // Fetch data
@@ -77,13 +78,13 @@ function AlbumDetail() {
   const visiblePhotos = photos.slice(0, visibleCount);
 
   const openLightbox = (photo) => {
-    setSelectedPhoto(photo);
+    const index = photos.findIndex((p) => p.id === photo.id);
+    setCurrentPhotoIndex(index);
     setLightboxOpen(true);
     document.body.classList.add("overflow-hidden");
   };
 
   const closeLightbox = () => {
-    setSelectedPhoto(null);
     setLightboxOpen(false);
     document.body.classList.remove("overflow-hidden");
   };
@@ -170,62 +171,13 @@ function AlbumDetail() {
         </p>
       )}
 
-      {lightboxOpen && selectedPhoto && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-90 z-50 flex items-center justify-center p-4"
-          onClick={closeLightbox}
-        >
-          <div
-            className="relative max-w-4xl max-h-[90vh] w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeLightbox}
-              className="absolute top-4 right-4 text-gray-900 dark:text-white bg-white/80 dark:bg-gray-900/80 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 transition z-10 cursor-pointer"
-              aria-label="Close lightbox"
-              title="Close lightbox"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1={18} y1={6} x2={6} y2={18}></line>
-                <line x1={6} y1={6} x2={18} y2={18}></line>
-              </svg>
-            </button>
-
-            <div className="inset-0 flex items-center justify-center">
-              <LoadingSpinner />
-            </div>
-
-            <img
-              src={`${VITE_IMAGES_API_URL}/id/${selectedPhoto.id}/600/600`}
-              alt={`${selectedPhoto.title}`}
-              className="w-full h-auto max-h-[80vh] object-contain rounded opacity-0"
-              loading="lazy"
-              onLoad={(e) => {
-                e.target.classList.remove("opacity-0");
-                e.target.previousElementSibling?.classList.add("hidden");
-              }}
-              onError={(e) => {
-                e.target.src = "/image-error.png";
-                e.target.classList.remove("opacity-0");
-                e.target.previousElementSibling?.classList.add("hidden");
-              }}
-            />
-
-            <div className="mt-4 text-center text-white">
-              <h3 className="text-lg font-medium">{selectedPhoto.title}</h3>
-            </div>
-          </div>
-        </div>
+      {lightboxOpen && (
+        <Lightbox
+          onClose={closeLightbox}
+          photos={photos}
+          currentPhotoIndex={currentPhotoIndex}
+          onNavigate={setCurrentPhotoIndex}
+        />
       )}
     </div>
   );
