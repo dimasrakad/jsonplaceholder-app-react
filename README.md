@@ -1,12 +1,52 @@
-# React + Vite
+# JSONPlacehorder Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive, and feature-rich dashboard built with **React**, **Vite**, and **Tailwind CSS** that consumes the [JSONPlaceholder](https://jsonplaceholder.typicode.com/) fake REST API
 
-Currently, two official plugins are available:
+![Preview](preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- **Multi-page Dashboard**
+  - **Posts**: View, search, and read post details with user info and comments.
+  - **Todos**: Interactive todo list with local toggle (completed/active).
+  - **Albums**: Browse albums with photo previews and full-screen lightbox.
+- **Modern UI/UX**
+  - Dark/Light mode toggle (persists in `localStorage`)
+  - Responsive sidebar navigation (collapses on mobile)
+  - Floating "Back to Top" button
+  - Loading spinners & skeleton-like feedback
+  - Smooth transitions and hover effects
+- **Advanced Interactions**
+  - **Search** across all content
+  - **Infinite scroll** for albums and photos
+  - **Lightbox** with blur backdrop, loading per image
+  - **Multi-photo preview** per album with horizontal scroll or navigation buttons
+- **Robust Error Handling**
+  - Custom **Error Boundary** for unexpected crashes
+  - Dedicated **404 Not Found** page
+  - API error fallbacks with user-friendly messages
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+
+- **Framework**: React 18 + Vite
+- **Styling**: Tailwind CSS (with Dark Mode)
+- **Routing**: React Router v6
+- **API**: JSONPlaceholder (fake REST API)
+- **Deployment**: Ready for Vercel / Netlify
+
+## 🌐 API Endpoints Used
+
+### Prerequisites
+
+This app consumes the following JSONPlaceholder resources:
+
+| Resource    | Count | Usage                                     |
+| ----------- | ----- | ----------------------------------------- |
+| `/post`     | 100   | List posts, view details, comments        |
+| `/users`    | 10    | Display author info on posts/albums/todos |
+| `/todos`    | 200   | Interactive todo list with filters        |
+| `/albums`   | 100   | Album list with photo previews            |
+| `/photos`   | 5000  | Lightbox view in album detail             |
+| `/comments` | 500   | Shown under each post                     |
+
+> "ℹ️ All relations are respected (e.g., `post.userId` -> `user.id`)"
